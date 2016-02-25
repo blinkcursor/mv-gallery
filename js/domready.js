@@ -1,14 +1,14 @@
 (function() {
 
-/*
-  TODO:
-  - Make build system for number of columns as variable etc.
-*/
+  /*
+    TODO:
+    - Make build system for number of columns as variable etc.
+  */
 
 
   // HELPER function to insert a new node after a reference node
   function insertAfter(referenceNode, newNode) {
-      referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+    referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
   }
 
   /*
@@ -34,6 +34,9 @@
 
     launchModal: function(e) {
       e.preventDefault();
+
+      // start monitoring touch events
+      touchy.init();
 
       // grab and keep a list of all the images in the gallery
       this.images = Array.prototype.slice.call(this.gallery.querySelectorAll('img')); // returns array not node list
@@ -78,14 +81,14 @@
       // Update 'sizes' to 100vw for the modal
       // Except, we can probably be smarter than that
       var modalWidth = this.modal.clientWidth,
-          modalHeight = this.modal.clientHeight,
-          modalRatio = modalWidth/modalHeight,
-          imgWidth = srcNode.naturalWidth || clonedImage.width,
-          imgHeight = srcNode.naturalHeight || clonedImage.height,
-          imgRatio = imgWidth/imgHeight,
-          smartSizes = ( modalRatio > imgRatio ) ? Math.round(modalWidth * imgRatio / modalRatio) + "px" : "100vw";
+        modalHeight = this.modal.clientHeight,
+        modalRatio = modalWidth / modalHeight,
+        imgWidth = srcNode.naturalWidth || clonedImage.width,
+        imgHeight = srcNode.naturalHeight || clonedImage.height,
+        imgRatio = imgWidth / imgHeight,
+        smartSizes = (modalRatio > imgRatio) ? Math.round(modalWidth * imgRatio / modalRatio) + "px" : "100vw";
 
-      if ( clonedImage.sizes ) { // Safari fail
+      if (clonedImage.sizes) { // Safari fail
         clonedImage.sizes = smartSizes;
       } else {
         // Workaround for Safari bug where it is missing 'sizes' property
@@ -93,9 +96,9 @@
         // We need to parse srcset ourselves and create a new img element
         // where we set the src property accordingly
         var safariImg = document.createElement('img'),
-            oSrcset = parseSrcset(clonedImage.srcset),
-            i = 0,
-            targetWidth = (smartSizes === "100vw") ? modalWidth : parseInt(smartSizes, 10);
+          oSrcset = parseSrcset(clonedImage.srcset),
+          i = 0,
+          targetWidth = (smartSizes === "100vw") ? modalWidth : parseInt(smartSizes, 10);
 
         while (oSrcset[i].w < targetWidth) {
           i++;
@@ -106,17 +109,14 @@
         clonedImage = safariImg;
       }
 
-      console.log("sizes set to " + clonedImage.sizes);
-
       return clonedImage;
     },
 
     bindModalEvents: function() {
-      // esc key to close
-      // click away from image to close
       this.thisHandleModalEvents = this.handleModalEvents.bind(this);
       window.addEventListener('keyup', this.thisHandleModalEvents, false);
       this.modal.addEventListener('click', this.thisHandleModalEvents, false);
+      window.addEventListener('touchend', this.thisHandleModalEvents, false);
     },
 
     handleModalEvents: function(e) {
@@ -146,6 +146,18 @@
           this.updateModal(-1);
         } else if (e.target === this.arrowRight) {
           this.updateModal(1);
+        }
+      }
+      if (e.type === 'touchend') {
+        // get results of touch event from touchy
+        var touchEvent = touchy.touchEnd(e);
+        switch (touchEvent.gesture) {
+          case "swipeleft":
+            this.updateModal(-1);
+            break;
+          case "swiperight":
+            this.updateModal(1);
+          // otherwise do nothing
         }
       }
     },
