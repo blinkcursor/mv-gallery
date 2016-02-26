@@ -1,14 +1,14 @@
+  /*
+    MINIMUM VIABLE GALLERY
+
+  */
 ;(function() {
 
-  /*
-    GALLERY MODAL
-  */
+  this.mvGallery = {
 
-  var galleryModal = {
+    init: function(selector) {
 
-    init: function() {
-
-      this.cacheDOM();
+      this.cacheDOM(selector);
 
       if (this.gallery) {
         // attach event handler to launch modal
@@ -16,8 +16,8 @@
       }
     },
 
-    cacheDOM: function() {
-      this.gallery = document.querySelector('.gallery');
+    cacheDOM: function(selector) {
+      this.gallery = document.querySelector(selector);
     },
 
     launchModal: function(e) {
@@ -41,6 +41,9 @@
       this.modal.appendChild(this.arrowRight);
       this.modal.appendChild(this.close);
 
+      // insert modal into DOM
+      insertAfter(this.gallery, this.modal);
+
       // grab and keep a list of all the images in the gallery
       this.images = Array.prototype.slice.call(this.gallery.querySelectorAll('img')); // return as array
 
@@ -55,9 +58,6 @@
 
       // attach event listeners
       this.bindModalEvents();
-
-      // insert modal into DOM
-      insertAfter(this.gallery, this.modal);
     },
 
     cloneImage: function(srcNode) {
@@ -90,7 +90,6 @@
           i++;
         }
         safariImg.src = oSrcset[i].url;
-
         clonedImage = safariImg;
       }
 
@@ -186,8 +185,6 @@
     }
 
   }
-  galleryModal.init();
-
 
   // HELPER function to insert a new node after a reference node
   function insertAfter(referenceNode, newNode) {

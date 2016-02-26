@@ -12,7 +12,7 @@
 
 <body>
   <h1>Testing a standalone responsive gallery</h1>
-  <ul class="gallery gallery--services list-bare u-mv+">
+  <ul class="gallery list-bare u-mv+">
     <li>
       <a href="img/sample1-1400.jpg"><img src="img/sample1-400.jpg" srcset="img/sample1-400.jpg 400w, img/sample1-600.jpg 600w, img/sample1-800.jpg 800w, img/sample1-1000.jpg 1000w, img/sample1-1200.jpg 1200w, img/sample1-1400.jpg 1400w, sample1-1800.jpg 1800w, sample1-2400.jpg 2400w" sizes="(min-width: 800px) 200px, 300px" alt="sample image"></a>
     </li>
@@ -51,6 +51,9 @@
     </li>
   </ul>
   <script src="dist/mvgallery-bundle.min.js"></script>
+  <script>
+    mvGallery.init('.gallery');
+  </script>
 </body>
 
 </html>
