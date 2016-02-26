@@ -52,7 +52,3 @@ gulpfile.js
 package.json
 .sass-cache/
 
-# source images #
-#################
-img/fullsize/
-img/1800/

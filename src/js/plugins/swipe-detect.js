@@ -1,7 +1,8 @@
 /*
   Basic swipe left/right detector
 
-  Monitor touch events, return an object describing the event
+  Monitor touch events, return an object oTouch describing the event
+  when touchEnd(e) passed touchevent.
 */
 
 (function() {
@@ -9,17 +10,22 @@
   this.touchy = {
 
     init: function() {
-      this.oTouch = {};
       this.bindEvents();
     },
 
     bindEvents: function() {
-      window.addEventListener('touchstart', this.touchStart.bind(this), false);
-      // window.addEventListener('touchend', this.touchEnd.bind(this), false);
+      this.thisTouchStart = this.touchStart.bind(this);
+      window.addEventListener('touchstart', this.thisTouchStart, false);
     },
 
     touchStart: function(e) {
-      // keep track of some of our touch event info
+      // clean slate
+      this.oTouch = {};
+
+      // for now we are only tracking single touches not multi-gestures
+      if (e.touches.length !== 1) return;
+
+      // stash touch event info in oTouch
       this.oTouch.startTime = Date.now();
       this.oTouch.startX = e.touches[0].clientX;
       this.oTouch.startY = e.touches[0].clientY;
@@ -31,14 +37,14 @@
     },
 
     touchEnd: function(e) {
-      console.log(e);
+      if ( !this.oTouch.startTime ) return; // are we tracking this touch?
+
       touchy.oTouch.duration = Date.now() - touchy.oTouch.startTime;
       touchy.oTouch.endX = e.touches[0].clientX;
       touchy.oTouch.endY = e.touches[0].clientY;
 
       // only label as a gesture other than tap if moved by 10%+
-      // biggest relative move decides what gesture is
-
+      // direction determined by biggest relative move
       var directionX = touchy.oTouch.endX - touchy.oTouch.startX,
         scaleX = Math.abs(directionX / document.documentElement.clientWidth),
         directionY = touchy.oTouch.endY - touchy.oTouch.startY,
@@ -55,8 +61,11 @@
       }
 
       return touchy.oTouch;
+    },
+
+    quietTouchy: function(){
+      window.removeEventListener('touchstart', this.thisTouchStart, false);
     }
   };
-//  touchy.init();
 
 })();

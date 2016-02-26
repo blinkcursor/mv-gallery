@@ -1,17 +1,6 @@
 (function() {
 
   /*
-    TODO:
-    - Make build system for number of columns as variable etc.
-  */
-
-
-  // HELPER function to insert a new node after a reference node
-  function insertAfter(referenceNode, newNode) {
-    referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
-  }
-
-  /*
     GALLERY MODAL
   */
 
@@ -23,8 +12,7 @@
 
       if (this.gallery) {
         // attach event handler to launch modal
-        this.thisLaunchModal = this.launchModal.bind(this); // to be able to later remove event listener
-        this.gallery.addEventListener('click', this.thisLaunchModal, false);
+        this.gallery.addEventListener('click', this.launchModal.bind(this), false);
       }
     },
 
@@ -35,43 +23,41 @@
     launchModal: function(e) {
       e.preventDefault();
 
-      // start monitoring touch events
-      touchy.init();
-
-      // grab and keep a list of all the images in the gallery
-      this.images = Array.prototype.slice.call(this.gallery.querySelectorAll('img')); // returns array not node list
-
-      // keep a pointer to the current image
-      this.currentImage = e.target;
-
       // create the modal
       this.modal = document.createElement('div');
       this.modal.classList.add('gallery__modal');
 
-      // attach event listeners
-      this.bindModalEvents();
-
-      // insert into DOM
-      insertAfter(this.gallery, this.modal);
-
-      // set currentImage pointer
-      this.currentImage = e.target;
-      // return a clone of the img
-      var clonedImage = this.cloneImage(this.currentImage);
-
-      // add img to the DOM
-      this.modal.appendChild(clonedImage);
-
       // add navigation elements
       this.arrowLeft = document.createElement('div');
       this.arrowLeft.classList.add('gallery__left');
+
       this.arrowRight = document.createElement('div');
       this.arrowRight.classList.add('gallery__right');
+
       this.close = document.createElement('div');
       this.close.classList.add('gallery__close');
+
       this.modal.appendChild(this.arrowLeft);
       this.modal.appendChild(this.arrowRight);
       this.modal.appendChild(this.close);
+
+      // grab and keep a list of all the images in the gallery
+      this.images = Array.prototype.slice.call(this.gallery.querySelectorAll('img')); // return as array
+
+      // keep a pointer to the current image
+      this.currentImage = e.target;
+
+      // return a clone of the current img
+      var clonedImage = this.cloneImage(this.currentImage);
+
+      // add cloned img to the modal
+      this.modal.appendChild(clonedImage);
+
+      // attach event listeners
+      this.bindModalEvents();
+
+      // insert modal into DOM
+      insertAfter(this.gallery, this.modal);
     },
 
     cloneImage: function(srcNode) {
@@ -88,22 +74,21 @@
         imgRatio = imgWidth / imgHeight,
         smartSizes = (modalRatio > imgRatio) ? Math.round(modalWidth * imgRatio / modalRatio) + "px" : "100vw";
 
-      if (clonedImage.sizes) { // Safari fail
+      if (clonedImage.sizes) { // Safari will fail
         clonedImage.sizes = smartSizes;
       } else {
         // Workaround for Safari bug where it is missing 'sizes' property
-        // and ignores changes to the 'sizes' attribute
+        // even though it has 'sizes' attribute which it ignores
         // We need to parse srcset ourselves and create a new img element
         // where we set the src property accordingly
         var safariImg = document.createElement('img'),
           oSrcset = parseSrcset(clonedImage.srcset),
-          i = 0,
-          targetWidth = (smartSizes === "100vw") ? modalWidth : parseInt(smartSizes, 10);
+          targetWidth = (smartSizes === "100vw") ? modalWidth : parseInt(smartSizes, 10),
+          i = 0;
 
         while (oSrcset[i].w < targetWidth) {
           i++;
         }
-
         safariImg.src = oSrcset[i].url;
 
         clonedImage = safariImg;
@@ -113,7 +98,10 @@
     },
 
     bindModalEvents: function() {
-      this.thisHandleModalEvents = this.handleModalEvents.bind(this);
+      touchy.init();
+
+      this.thisHandleModalEvents = this.handleModalEvents.bind(this); // (to be able to later remove event listeners)
+
       window.addEventListener('keyup', this.thisHandleModalEvents, false);
       this.modal.addEventListener('click', this.thisHandleModalEvents, false);
       window.addEventListener('touchend', this.thisHandleModalEvents, false);
@@ -166,6 +154,7 @@
 
       var index = this.images.indexOf(this.currentImage),
         nextIndex = index + direction;
+
       // wraparound at first and last images
       nextIndex = (nextIndex === this.images.length) ? 0 : nextIndex;
       nextIndex = (nextIndex < 0) ? this.images.length - 1 : nextIndex;
@@ -188,11 +177,21 @@
       // tidy up event handlers
       this.modal.removeEventListener('click', this.thisHandleModalEvents, false);
       window.removeEventListener('keyup', this.thisHandleModalEvents, false);
+      window.removeEventListener('touchend', this.thisHandleModalEvents, false);
 
       this.modal.parentNode.removeChild(this.modal);
+
+      // tell touchy to stop listening to touch events
+      touchy.quietTouchy();
     }
 
   }
   galleryModal.init();
+
+
+  // HELPER function to insert a new node after a reference node
+  function insertAfter(referenceNode, newNode) {
+    referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+  }
 
 })();
