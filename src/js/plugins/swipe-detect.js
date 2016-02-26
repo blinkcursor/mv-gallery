@@ -5,7 +5,7 @@
   when touchEnd(e) passed touchevent.
 */
 
-(function() {
+;(function() {
 
   this.touchy = {
 
@@ -37,11 +37,12 @@
     },
 
     touchEnd: function(e) {
+
       if ( !this.oTouch.startTime ) return; // are we tracking this touch?
 
       touchy.oTouch.duration = Date.now() - touchy.oTouch.startTime;
-      touchy.oTouch.endX = e.touches[0].clientX;
-      touchy.oTouch.endY = e.touches[0].clientY;
+      touchy.oTouch.endX = e.changedTouches[0].clientX;
+      touchy.oTouch.endY = e.changedTouches[0].clientY;
 
       // only label as a gesture other than tap if moved by 10%+
       // direction determined by biggest relative move

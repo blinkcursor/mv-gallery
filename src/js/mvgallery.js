@@ -1,4 +1,4 @@
-(function() {
+;(function() {
 
   /*
     GALLERY MODAL
@@ -145,7 +145,7 @@
             break;
           case "swiperight":
             this.updateModal(1);
-          // otherwise do nothing
+            // otherwise do nothing
         }
       }
     },
