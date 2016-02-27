@@ -23,7 +23,7 @@ But any image whose aspect ratio is smaller than the screen aspect ratio won't o
 Think portrait images on a laptop screen, which might occupy 50% or less of the available width according to `sizes`, and which results in the browser selecting a much larger image than required.
 
 #### The problem with portraits
-![Portrait image in a landscape view](/img/portrait.jpg)
+![Portrait image in a landscape view](https://github.com/blinkcursor/mv-gallery/blob/gh-pages/img/portraits.jpg)
 
 When cloning our thumbnail image we know its aspect ratio which gives us a chance to compute a more relevant `sizes` value by comparing it to the screen aspect ratio.
 
@@ -31,7 +31,7 @@ Safari (OSX and iOS) is a problem. It has a bug whereby the `sizes` *attribute* 
 
 ### To use
 
-The are no markup requirements for your gallery. Just wrap some `<img>`'s in a container and pass the query selector for your container to `mvGallery.init(*selector*)`.
+The are no markup requirements for your gallery. Just wrap some `<img>`'s in a container and pass the query selector for your container to `mvGallery.init(selector)`.
 
 The source code is in [src/js/mvgallery.js](src/js/mvgallery.js).
 
@@ -42,7 +42,7 @@ It has two dependencies.
 
 In [/dist](/dist) these are bundled with mvgallery into `mvgallery-bundle.min.js`, while `mvgallery.min.css` has the minimal styling required for the modal lightbox. (How you style your gallery is up to you.)
 
-Include this just before your closing `</body>` tag, and instantiate with `mvGallery.init('*selector*')` 
+Link to `mvgallery.min.css` in your document `<head>` and include `mvgallery-bundle.min.js` just before your closing `</body>` tag, then instantiate with `mvGallery.init('selector')`.
 
 ### What's missing
 Nothing fancy here. In production this would benefit from some nice transitions when navigating between images, and use of the History API to allow linking directly to individual images when shared etc.
