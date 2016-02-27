@@ -48,8 +48,6 @@ config.codekit
 # gulp etc #
 ############
 node_modules/
-gulpfile.js
-package.json
 .sass-cache/
 
 # design files #
