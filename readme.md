@@ -1,34 +1,51 @@
 # Minimum Viable Gallery
 
-With growing adoption of srcset & sizes for responsive images we can let the browser do the work of choosing optimum image sources for both the gallery thumbnails and the full size image viewed in a modal lightbox.
+With growing adoption of srcset & sizes for responsive images we can let the browser do the work of choosing optimum image sources for both the gallery thumbnails and the full size images with just a single `<img>` definition. We just need a little JavaScript to update the `sizes` attribute when the layout changes for our lightbox view.
 
 Demo: [blinkcursor.github.io/mv-gallery/](http://blinkcursor.github.io/mv-gallery/)
 
-A single definition for each `<img>` is all that we need for our thumbnails and full-sized images including fallback for if/when JavaScript fails:
 
 ```html
-<a href="img/sample1-1400.jpg">
-	<img src="img/sample1-400.jpg" 
-		 srcset="img/sample1-400.jpg 400w, img/sample1-600.jpg 600w, img/sample1-800.jpg 800w, img/sample1-1000.jpg 1000w, img/sample1-1200.jpg 1200w, img/sample1-1400.jpg 1400w, sample1-1800.jpg 1800w, sample1-2400.jpg 2400w" 
+<a href="img/nojs-fallback.jpg">
+	<img src="img/unsupported-fallback.jpg" 
+		 srcset="img/smallest.jpg 400w, img/smallish.jpg 600w, img/small.jpg 800w, img/medium.jpg 1000w, img/biggish.jpg 1200w, img/big.jpg 1400w, bigger.jpg 1800w, biggest.jpg 2400w" 
 		 sizes="(max-width: 399px) 100%, (max-width: 599px) 50%, (max-width: 799px) 33.33%, 200px" alt="sample image">
 </a>
 ```
-The `sizes` definition is for our thumbnails. When the user clicks on a thumbnail we launch a modal lightbox and populate it with a clone of the thumbnail but we dynamically update `sizes` to that required for the modal and let the browser select the most appropriate image source.
+The `sizes` definition is for our gallery (thumbnails) view. When the user clicks on a thumbnail we launch a modal lightbox and populate it with a *clone* of the thumbnail, but before inserting it into the DOM we dynamically update `sizes` to the value appropriate for the modal and let the browser select the best image source.
 
-For our baseline, `sizes` for our full-width modal would be `100vw`, but we can be smarter than that.
+For our baseline, `sizes` for a full-width modal would be `100vw`, but we can be smarter than that.
 
-We use `max-height: 100%` and `max-width: 100%` so that our full sized images are constrained to fit on the screen. But for any image whose aspect ratio is smaller than the screen aspect ratio the full-size image doesn't occupy the full width of the screen. Portrait images on a typical laptop landscape screen, for example, might occupy as little as 50% of the available width according to `sizes`, so even though we are using srcset and sizes to load images no bigger than necessary the browser may still choose an image source twice as large as required.
+The modal uses `max-height: 100%` and `max-width: 100%` to constrain our full-sized images to fit on the screen. 
 
-When cloning our thumbnail image we can set `sizes` accordingly based upon the source image aspect ratio.
+But any image whose aspect ratio is smaller than the screen aspect ratio won't occupy the full width of the screen, and `sizes: 100vw` will overstate how much width the image will occupy.
 
-Safari (OSX and iOS) is a problem. It has a bug whereby although the `sizes` *attribute* is present on HTML `<img>` elements, the `sizes` *property* is missing and any attempt to dynamically update `sizes` is ignored. As a workaround for Safari we parse `srcset` ourselves to find the appropriate size and set the image `src` instead.
+Think portrait images on a laptop screen, which might occupy 50% or less of the available width according to `sizes`, and which results in the browser selecting a much larger image than required.
+
+#### The problem with portraits
+![Portrait image in a landscape view](/img/portrait.jpg)
+
+When cloning our thumbnail image we know its aspect ratio which gives us a chance to compute a more relevant `sizes` value by comparing it to the screen aspect ratio.
+
+Safari (OSX and iOS) is a problem. It has a bug whereby the `sizes` *attribute* is present on `<img>` elements, but the `sizes` *property* is missing and any attempt to dynamically update `sizes` is ignored. As a workaround for Safari we parse `srcset` ourselves to find the appropriate size and set the `src` on a new image instead.
 
 ### To use
 
-Source code is in mvgallery.js
-It depends upon a crude touch detect library to be able to swipe between images
-And srcset parser library by...
+The are no markup requirements for your gallery. Just wrap some `<img>`'s in a container and pass the query selector for your container to `mvGallery.init(*selector*)`.
 
-In /dist these are bundled together into mvgallery-bundle.min.js
+The source code is in [src/js/mvgallery.js](src/js/mvgallery.js).
+
+It has two dependencies.
+
+1. [src/js/plugins/swipe-detect.js](src/js/plugins/swipe-detect.js) is a crude touch event handler written specifically for mv-gallery to add swiping between images. IRL you might want to use a dedicated touch handling library like [hammer.js](http://hammerjs.github.io) and modify mvgallery.js accordingly.
+2. [parse-srcset by Alex Bell](https://github.com/albell/parse-srcset) for the Safari bug workaround.
+
+In [/dist](/dist) these are bundled with mvgallery into `mvgallery-bundle.min.js`, while `mvgallery.min.css` has the minimal styling required for the modal lightbox. (How you style your gallery is up to you.)
 
 Include this just before your closing `</body>` tag, and instantiate with `mvGallery.init('*selector*')` 
+
+### What's missing
+Nothing fancy here. In production this would benefit from some nice transitions when navigating between images, and use of the History API to allow linking directly to individual images when shared etc.
+
+### The demo
+As well as concatenating and minifying the source files, the `gulpfile` includes a task to automatically generate all of the different image sizes from source images found in the `src/img` directory. The example should be self-explanatory.

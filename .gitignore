@@ -46,9 +46,12 @@ config.codekit
 .codekit-cache/
 
 # gulp etc #
-###########
+############
 node_modules/
 gulpfile.js
 package.json
 .sass-cache/
 
+# design files #
+################
+*.afdesign
