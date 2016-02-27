@@ -11,7 +11,11 @@
 </head>
 
 <body>
-  <h1>Testing a standalone responsive gallery</h1>
+  <h1>Minimum Viable Gallery</h1>
+  <p>A bare bones example of how to get the most from <em>srcset</em> and <em>sizes</em> to make a responsive gallery from a simple list of images that leaves it up to the browser to choose image sources both for gallery thumbnails and full-sized versions from a single &lt;img&gt; declaration.</p>
+  <p>And while we're at it, finesse <em>sizes</em> to solve the problem of portait images taking up less than the available space when constrained by <em>max-height: 100%</em> as in a traditional lightbox.</p>
+  <p>View <a href="http://github.com/blinkcursor/mv-gallery">source</a> on github</p>
+
   <ul class="gallery list-bare u-mv+">
     <li>
       <a href="img/sample1-1400.jpg"><img src="img/sample1-400.jpg" srcset="img/sample1-400.jpg 400w, img/sample1-600.jpg 600w, img/sample1-800.jpg 800w, img/sample1-1000.jpg 1000w, img/sample1-1200.jpg 1200w, img/sample1-1400.jpg 1400w, sample1-1800.jpg 1800w, sample1-2400.jpg 2400w" sizes="(max-width: 399px) 100%, (max-width: 599px) 50%, (max-width: 799px) 33.33%, 200px" alt="sample image"></a>
