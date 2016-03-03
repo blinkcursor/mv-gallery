@@ -12,11 +12,26 @@
 
 <body>
   <h1>Minimum Viable Gallery</h1>
-  <p>A bare bones example of how to get the most from <em>srcset</em> and <em>sizes</em> to make a responsive gallery from a simple list of images that leaves it up to the browser to choose image sources both for gallery thumbnails and full-sized versions from a single &lt;img&gt; declaration.</p>
-  <p>And while we're at it, finesse <em>sizes</em> to solve the problem of portait images taking up less than the available space when constrained by <em>max-height: 100%</em> as in a traditional lightbox.</p>
+  <p>A bare bones example of how to get the most from <em>srcset</em> and <em>sizes</em> to make a responsive gallery from a simple list of images that leaves it up to the browser to choose the most appropriate image sources both for gallery thumbnails <em>and</em> their full-sized versions just from single &lt;img&gt; declarations.</p>
+
+  <pre class="code">
+  &lt;<span class="tag">a</span> <span class="attribute">href</span>=&quot;img/nojs-fallback.jpg&quot;&gt;
+    &lt;<span class="tag">img</span> <span class="attribute">src</span>=&quot;img/unsupported-fallback.jpg&quot; 
+         <span class="attribute">srcset</span>=&quot;img/smallest.jpg 400w, img/smallish.jpg 600w, img/small.jpg 800w, 
+                 img/medium.jpg 1000w, img/biggish.jpg 1200w, img/big.jpg 1400w, 
+                 img/bigger.jpg 1800w, img/biggest.jpg 2400w&quot;
+         <span class="attribute">sizes</span>=&quot;(max-width: 399px) 100%,
+                (max-width: 599px) 50%,
+                (max-width: 799px) 33.33%, 200px&quot;
+         alt=&quot;sample image&quot;&gt;
+  &lt;/<span class="tag">a</span>&gt;</pre>
+
+  <p>The trick is to reset the <code class="attribute">sizes</code> attribute when promoting the thumbnail image to the bigger lightbox modal, probably to something like <code>100vw</code>.</p>
+
+  <p>But while we're at it, we can finesse <code class="attribute">sizes</code> to solve the problem of portait images taking up less than the available space when constrained by <code>max-height:100%</code> and thereby encouraging the browser to download a bigger file than necessary.</p>
   <p>View <a href="http://github.com/blinkcursor/mv-gallery">source</a> on github</p>
 
-  <ul class="gallery list-bare u-mv+">
+  <ul class="mvgallery list-bare u-mv+">
     <li>
       <a href="img/sample1-1400.jpg"><img src="img/sample1-400.jpg" srcset="img/sample1-400.jpg 400w, img/sample1-600.jpg 600w, img/sample1-800.jpg 800w, img/sample1-1000.jpg 1000w, img/sample1-1200.jpg 1200w, img/sample1-1400.jpg 1400w, sample1-1800.jpg 1800w, sample1-2400.jpg 2400w" sizes="(max-width: 399px) 100%, (max-width: 599px) 50%, (max-width: 799px) 33.33%, 200px" alt="sample image"></a>
     </li>
@@ -56,7 +71,7 @@
   </ul>
   <script src="dist/mvgallery-bundle.min.js"></script>
   <script>
-    mvGallery.init('.gallery');
+    mvGallery.init('.mvgallery');
   </script>
 </body>
 

@@ -1,0 +1,126 @@
+/* 
+    RESET & NORMALIZE etc.
+    (based upon inuit.css if you're curious)
+*/
+@import "core/settings.defaults";
+@import "mixins/mixins.framework";
+@import "mixins/mixins.project";
+@import "core/generic.normalize";
+@import "core/generic.reset";
+@import "core/generic.box-sizing";
+@import "core/generic.margins";
+@import "core/base.page";
+@import "core/base.images";
+
+/*
+    STYLES USED IN DEMO
+*/
+html {
+    background-color: #eee;
+}
+
+body {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+code {
+    padding: 0 0.5em;
+}
+.code {
+    background-color: #333;
+    color: #eee;
+    padding: 1em;
+    border-radius: 0.25em;
+}
+.tag {
+    color: #E0E84D;
+}
+.attribute {
+    color: #E39D2D;
+    background-color: #333;
+}
+
+/*
+    Image gallery -- roll your own
+*/
+.mvgallery {
+    display: flex;
+    flex-flow: row wrap;
+}
+.mvgallery li {
+    flex: 1 0 200px; // effectively min-width for the child, works in SafitnIE
+    max-width: 100%;
+    height: 250px;
+    outline: 2px solid #fff;
+}
+.mvgallery img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    max-width: none; // unset from reset
+}
+
+/*
+    STYLES REQUIRED FOR THE LIGHTBOX MODAL
+*/
+.mvgallery__modal {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    padding: 0;
+    background: rgba(0,0,0,0.8);
+    z-index: 9;
+    & > img {
+        margin: auto;
+        max-width: 100%;
+        max-height: 100%;
+    }
+}
+
+.mvgallery__left {
+    position: absolute;
+    left: 0.5rem;
+    top: calc(50% - 16px);
+    height: 2rem;
+    width: 2rem;
+    cursor: pointer;
+    transition: opacity 0.33s;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cstyle%3E.a%7Bfill%3A%23fff%3B%7D%3C/style%3E%3Cpath%20d%3D%22M16%2032c8.8%200%2016-7.2%2016-16s-7.2-16-16-16-16%207.2-16%2016%207.2%2016%2016%2016zM16%203c7.2%200%2013%205.8%2013%2013s-5.8%2013-13%2013-13-5.8-13-13%205.8-13%2013-13z%22%20class%3D%22a%22/%3E%3Cpath%20d%3D%22M20.9%209.9l-2.8-2.8-8.9%208.9%208.9%208.9%202.8-2.8-6.1-6.1z%22%20class%3D%22a%22/%3E%3C/svg%3E');
+    background-repeat: no-repeat;
+    .gallery__img:hover ~ & {
+        opacity: 0.5;
+    }
+}
+.mvgallery__right {
+    position: absolute;
+    right: 0.5rem;
+    top: calc(50% - 16px);
+    height: 32px;
+    width: 32px;
+    cursor: pointer;
+    transition: opacity 0.33s;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cstyle%3E.a%7Bfill%3A%23fff%3B%7D%3C/style%3E%3Cpath%20d%3D%22M16%200c-8.8%200-16%207.2-16%2016s7.2%2016%2016%2016%2016-7.2%2016-16-7.2-16-16-16zM16%2029c-7.2%200-13-5.8-13-13s5.8-13%2013-13%2013%205.8%2013%2013-5.8%2013-13%2013z%22%20class%3D%22a%22/%3E%3Cpath%20d%3D%22M11.1%2022.1l2.8%202.8%208.9-8.9-8.9-8.9-2.8%202.8%206.1%206.1z%22%20class%3D%22a%22/%3E%3C/svg%3E');
+    background-repeat: no-repeat;
+    .gallery__img:hover ~ & {
+        opacity: 0.5;
+    }
+}
+
+.mvgallery__close {
+    position: absolute;
+    right: 0.5rem;
+    top: 0.5rem;
+    height: 32px;
+    width: 32px;
+    cursor: pointer;
+    transition: opacity 0.33s;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2032%2032%22%3E%3Cstyle%3E.a%7Bfill%3A%23fff%3B%7D%3C/style%3E%3Cpath%20d%3D%22M16%200c-8.8%200-16%207.2-16%2016s7.2%2016%2016%2016%2016-7.2%2016-16-7.2-16-16-16zM16%2029c-7.2%200-13-5.8-13-13s5.8-13%2013-13%2013%205.8%2013%2013-5.8%2013-13%2013z%22%20class%3D%22a%22/%3E%3Cpath%20d%3D%22M21%208l-5%205-5-5-3%203%205%205-5%205%203%203%205-5%205%205%203-3-5-5%205-5z%22%20class%3D%22a%22/%3E%3C/svg%3E');
+    background-repeat: no-repeat;
+    .gallery__img:hover ~ & {
+        opacity: 0.5;
+    }
+}

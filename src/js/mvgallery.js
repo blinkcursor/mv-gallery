@@ -25,17 +25,17 @@
 
       // create the modal
       this.modal = document.createElement('div');
-      this.modal.classList.add('gallery__modal');
+      this.modal.classList.add('mvgallery__modal');
 
       // add navigation elements
       this.arrowLeft = document.createElement('div');
-      this.arrowLeft.classList.add('gallery__left');
+      this.arrowLeft.classList.add('mvgallery__left');
 
       this.arrowRight = document.createElement('div');
-      this.arrowRight.classList.add('gallery__right');
+      this.arrowRight.classList.add('mvgallery__right');
 
       this.close = document.createElement('div');
-      this.close.classList.add('gallery__close');
+      this.close.classList.add('mvgallery__close');
 
       this.modal.appendChild(this.arrowLeft);
       this.modal.appendChild(this.arrowRight);
