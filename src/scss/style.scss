@@ -47,6 +47,7 @@ code {
 .mvgallery {
     display: flex;
     flex-flow: row wrap;
+    list-style: none;
 }
 .mvgallery li {
     flex: 1 0 200px; // effectively min-width for the child, works in SafitnIE
